@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebOS 11 — Windows 11 style desktop</title>
+  <meta name="description" content="A web-based recreation of the Windows 11 desktop: boot and lock screens, Start menu, taskbar, File Explorer, Edge, Notepad, Paint, Calculator, Terminal, Settings and more.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ Boot screen ============ -->
+  <div id="boot" class="screen boot hidden" aria-label="Starting">
+    <div class="boot-logo"><span class="logo"><i></i><i></i><i></i><i></i></span></div>
+    <div class="boot-dots"><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+
+  <!-- ============ Lock screen ============ -->
+  <div id="lock" class="screen lock hidden" aria-label="Lock screen">
+    <div class="lk-top">
+      <div id="lk-time" class="lk-time"></div>
+      <div id="lk-date" class="lk-date"></div>
+    </div>
+    <div class="lk-hint"><span id="lk-name">User</span> · Click or press any key to sign in</div>
+    <div class="lk-bottom">
+      <span class="lk-status" data-icon="wifi"></span>
+      <span class="lk-status" data-icon="battery"></span>
+      <button id="lk-power" class="lk-ibtn" title="Power" data-icon="power"></button>
+    </div>
+  </div>
+
+  <!-- ============ Sign-in screen ============ -->
+  <div id="login" class="screen login hidden" aria-label="Sign in">
+    <div class="lg-form">
+      <span id="lg-av" class="avatar xl">U</span>
+      <b id="lg-name" class="lg-name">User</b>
+      <div class="lg-row">
+        <input id="lg-pass" class="lg-input" type="password" placeholder="Password" autocomplete="off">
+        <button id="lg-go" class="lg-go" title="Sign in" data-icon="arrowRight"></button>
+      </div>
+      <p id="lg-hint" class="lg-hint"></p>
+      <p id="lg-err" class="lg-err"></p>
+    </div>
+    <div class="lg-bottom">
+      <button id="lg-power" class="lk-ibtn" title="Power" data-icon="power"></button>
+    </div>
+  </div>
+
+  <!-- ============ Shutdown screen ============ -->
+  <div id="shutdown" class="screen shutdown hidden" data-state="">
+    <p class="sd-msg"><span class="sd-stop">Shutting down</span><span class="sd-off">Click or press any key to turn on</span></p>
+  </div>
+
+  <!-- ============ Desktop ============ -->
+  <div id="desktop">
+    <div id="wallpaper"></div>
+    <div id="icons"></div>
+    <div id="windows"></div>
+  </div>
+
+  <div id="dim"></div>
+  <div id="night"></div>
+
+  <!-- ============ Taskbar ============ -->
+  <nav id="taskbar" aria-label="Taskbar">
+    <div class="tb-left">
+      <button id="tb-wx" class="tb-wx tb-toggle" title="Weather"></button>
+    </div>
+    <div class="tb-center">
+      <button id="tb-start" class="tb-btn tb-toggle" title="Start"><span class="logo"><i></i><i></i><i></i><i></i></span></button>
+      <button id="tb-search" class="tb-btn tb-toggle" title="Search" data-icon="search"></button>
+      <button id="tb-taskview" class="tb-btn tb-toggle" title="Task View" data-icon="grid"></button>
+      <button id="tb-widgets" class="tb-btn tb-toggle" title="Widgets" data-icon="cloud"></button>
+      <span class="tb-sep"></span>
+      <div id="tb-apps" class="tb-apps"></div>
+    </div>
+    <div class="tb-right">
+      <button id="tb-tray" class="tb-tray tb-toggle" title="Quick settings"><span id="tray-ic" class="tray-ic"></span></button>
+      <button id="tb-clock" class="tb-clock tb-toggle" title="Notification center">
+        <span id="tb-time"></span><span id="tb-date"></span>
+      </button>
+      <button id="tb-desk" class="tb-desk" title="Show desktop"></button>
+    </div>
+  </nav>
+
+  <!-- ============ Start menu ============ -->
+  <div id="start" class="flyout start hidden" role="dialog" aria-label="Start">
+    <div class="st-search">
+      <span data-icon="search"></span>
+      <input id="st-q" placeholder="Type here to search" autocomplete="off">
+    </div>
+    <div class="st-body">
+      <div id="st-main">
+        <div id="st-pinsWrap">
+          <div class="st-head"><span>Pinned</span><button id="st-all" class="st-allbtn">All apps <span data-icon="arrowRight"></span></button></div>
+          <div id="st-pins" class="st-pins"></div>
+        </div>
+        <div id="st-recWrap">
+          <div class="st-head"><span>Recommended</span></div>
+          <div id="st-recs" class="st-recs"></div>
+        </div>
+        <div id="st-resWrap" hidden>
+          <div class="st-head"><span>Best match</span></div>
+          <div id="st-res" class="st-recs"></div>
+        </div>
+      </div>
+      <div id="st-allv" class="st-allv" hidden>
+        <div class="st-head"><button id="st-back" class="st-allbtn"><span data-icon="back"></span> All apps</button></div>
+        <div id="st-list" class="st-list"></div>
+      </div>
+    </div>
+    <div class="st-foot">
+      <button id="st-user" class="st-user"><span id="st-av" class="avatar sm">U</span><span id="st-un">User</span></button>
+      <button id="st-power" class="st-power" title="Power" data-icon="power"></button>
+    </div>
+  </div>
+
+  <!-- ============ Quick settings ============ -->
+  <div id="qs" class="flyout qs hidden" role="dialog" aria-label="Quick settings"></div>
+
+  <!-- ============ Notification center + calendar ============ -->
+  <div id="nc" class="flyout nc hidden" role="dialog" aria-label="Notification center">
+    <div class="nc-head"><b>Notifications</b><button id="nc-clear" class="btn">Clear all</button></div>
+    <div id="nc-list" class="nc-list"></div>
+    <div id="nc-cal" class="nc-cal"></div>
+  </div>
+
+  <!-- ============ Widgets ============ -->
+  <div id="widgets" class="flyout widgets hidden" role="dialog" aria-label="Widgets">
+    <div id="wd-wx" class="wd-card"></div>
+    <div class="wd-card"><div id="wd-clock"></div></div>
+    <div class="wd-card"><div class="wd-h">Calendar</div><div id="wd-cal"></div></div>
+    <div class="wd-card"><div class="wd-h">Recommended</div><div id="wd-recs"></div></div>
+  </div>
+
+  <!-- ============ Task View ============ -->
+  <div id="taskview" class="hidden" aria-label="Task View">
+    <div class="tv-head">Task View</div>
+    <div id="tv-grid" class="tv-grid"></div>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="js/icons.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/fs.js"></script>
+  <script src="js/wm.js"></script>
+  <script src="js/apps.js"></script>
+  <script src="js/shell.js"></script>
+</body>
+</html>
